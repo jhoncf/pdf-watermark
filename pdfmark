@@ -1,0 +1,39 @@
+#!/bin/bash
+
+install(){
+	if ! [ -x "$(command -v pip)" ]; then
+        echo 'Pip nao esta instalado' >&2;
+        echo 'Instalando...';
+        pip_install;
+        echo "Instalado com sucesso"
+        exit 1
+    fi
+
+    sudo pip install pypdf2
+    sudo pip install reportlab
+
+	exit 0;
+}
+
+pip_install(){
+    sudo apt-get update;
+    sudo apt-get install -y python-pip
+    exit 0;
+}
+
+while getopts 'a:f:i' flag; do
+    case "${flag}" in
+        a)
+            hash="${OPTARG}" ;;
+        f)
+            filename="${OPTARG}" ;;
+        i)
+            pip_install
+            exit 1;
+        ;;
+    esac
+done
+
+python script.py -f $filename -a $hash
+
+exit 0;
